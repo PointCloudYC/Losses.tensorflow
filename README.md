@@ -66,5 +66,5 @@ lovasz losses are 0.183,0.975,0.452
 
 
 ## refs
-* [shruti-jadon/Semantic-Segmentation-Loss-Functions: This Repository is implementation of majority of Semantic Segmentation Loss Functions](https://github.com/shruti-jadon/Semantic-Segmentation-Loss-Functions)
-* [JunMa11/SegLoss: A collection of loss functions for medical image segmentation](https://github.com/JunMa11/SegLoss)
+* [Keras Losses](https://keras.io/api/losses/)
+* [kornia.losses — Kornia documentation](https://kornia.readthedocs.io/en/latest/losses.html)
