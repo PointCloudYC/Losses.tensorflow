@@ -349,4 +349,17 @@ def flatten_probas(probas, labels, ignore=None, order='BHWC'):
     vlabels = tf.boolean_mask(labels, valid, name='valid_labels')
     return vprobas, vlabels
 
+def lovasz_grad(gt_sorted):
+    """
+    Computes gradient of the Lovasz extension w.r.t sorted errors
+    See Alg. 1 in paper
+    """
+    gts = tf.reduce_sum(gt_sorted)
+    intersection = gts - tf.cumsum(gt_sorted)
+    union = gts + tf.cumsum(1. - gt_sorted)
+    jaccard = 1. - intersection / union
+    jaccard = tf.concat((jaccard[0:1], jaccard[1:] - jaccard[:-1]), 0)
+    return jaccard
+
+
 # combound loss (e.g. CE+ dice loss)
