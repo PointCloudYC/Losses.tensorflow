@@ -8,49 +8,27 @@ if __name__ == "__main__":
     logits_common = [[6.0, 1.0, 1.0], [0.0, 5.0, 1.0], [4.0, 8.0, 3.0],[4.0, 8.0, 2.0]] # 1st and 4th are predicted wrongly
     labels = [0, 1, 1, 2]
 
-    ce = CrossEntropyWeightedLoss(weights=[2,2,2])
-    print("CE losses are {:.3f},{:.3f},{:.3f}".format(
-        ce(labels,logits_all_correct),
-        ce(labels,logits_all_wrong),
-        ce(labels,logits_common)
-    ))
+    loss_names = ['ce','wce','dice','focal','tversky','lovasz']
+    for loss_name in loss_names:
+        if loss_name == 'ce':
+            loss_fn = CrossEntropyWeightedLoss(weights=[2,2,2])
+        elif loss_name == 'wce':
+            loss_fn = CrossEntropyWeightedLoss(weights=[10,2,2])
+        elif loss_name == 'dice':
+            loss_fn = DiceLoss()
+        elif loss_name == 'focal':
+            loss_fn = FocalLoss()
+        elif loss_name == 'tversky':
+            loss_fn = TverskyLoss()
+        elif loss_name == 'lovasz':
+            loss_fn = LovaszLoss()
+        else:
+            print('not recognized, use ce loss as defualt.')
+            loss_fn = CrossEntropyWeightedLoss(weights=[2,2,2])
 
-    ce_weighted = CrossEntropyWeightedLoss(weights=[10,2,2])
-    print("weighted CE losses are {:.3f},{:.3f},{:.3f}".format(
-        ce_weighted(labels,logits_all_correct),
-        ce_weighted(labels,logits_all_wrong),
-        ce_weighted(labels,logits_common)
-    ))
-
-    # dice loss
-    loss_dice=DiceLoss()
-    print("dice losses are {:.3f},{:.3f},{:.3f}".format(
-        loss_dice(labels,logits_all_correct),
-        loss_dice(labels,logits_all_wrong),
-        loss_dice(labels,logits_common)
-    ))
-
-
-    # focal loss
-    loss_focal=FocalLoss()
-    print("focal losses are {:.3f},{:.3f},{:.3f}".format(
-        loss_focal(labels,logits_all_correct),
-        loss_focal(labels,logits_all_wrong),
-        loss_focal(labels,logits_common)
-    ))
-
-    # trevsky loss
-    loss_tv=TverskyLoss()
-    print("Tversky losses are {:.3f},{:.3f},{:.3f}".format(
-        loss_tv(labels,logits_all_correct),
-        loss_tv(labels,logits_all_wrong),
-        loss_tv(labels,logits_common)
-    ))
-
-    # lovasz loss
-    loss_lovasz=LovaszLoss()
-    print("lovasz losses are {:.3f},{:.3f},{:.3f}".format(
-        loss_lovasz(labels,logits_all_correct),
-        loss_lovasz(labels,logits_all_wrong),
-        loss_lovasz(labels,logits_common)
-    ))
+        print("{} losses are {:.3f},{:.3f},{:.3f}".format(
+            loss_name,
+            loss_fn(y_true=labels,y_pred=logits_all_correct),
+            loss_fn(labels,logits_all_wrong),
+            loss_fn(labels,logits_common)
+        ))
