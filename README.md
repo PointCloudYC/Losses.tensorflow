@@ -2,7 +2,7 @@
 
 ## losses implemented
 
-**losses all inherit from kereas.losses.loss**
+**all losses inherit from kereas.losses.loss and obey official recommended practice of tensorflow 1 and 2.x**
 
 - cross entropy with weights
 
@@ -21,7 +21,8 @@ Note: not supported by tensorflow 1.13 or older version since keras.losses.Loss 
 
 ## how to use?
 
-check an example for dice loss, other losses are similar, for more examples check `main.py`
+- check an example for dice loss
+
 ```
 logits_all_correct = [[4.0, 2.0, 1.0], [0.0, 5.0, 1.0], [4.0, 8.0, 3.0],[4.0, 8.0, 9.0]]
 logits_all_wrong = [[2.0, 4.0, 1.0], [5.0, 2.0, 1.0], [8.0, 4.0, 3.0],[8.0, 2.0, 2.0]]
@@ -37,7 +38,10 @@ print("Dice losses are {:.3f},{:.3f},{:.3f}".format(
 ))
 ```
 
-for training, just pass this loss to fit or relevant methods
+- other losses are similar, for more examples check `main.py`
+
+
+- for training, just pass this loss to fit or relevant methods
 
 ```
 import losses
@@ -47,6 +51,19 @@ loss_fn = losses.DiceLoss()
 model.compile(loss=loss_fn, optimizer='adam')
 ...
 ```
+
+## output test
+
+```
+ce losses are 0.045,1.272,0.507
+wce losses are 0.043,0.855,0.219
+dice losses are 0.119,0.955,0.265
+focal losses are 0.003,1.793,0.749
+tversky losses are 0.119,0.955,0.265
+lovasz losses are 0.183,0.975,0.452
+```
+
+
 
 ## refs
 * [shruti-jadon/Semantic-Segmentation-Loss-Functions: This Repository is implementation of majority of Semantic Segmentation Loss Functions](https://github.com/shruti-jadon/Semantic-Segmentation-Loss-Functions)
