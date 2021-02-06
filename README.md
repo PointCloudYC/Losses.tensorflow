@@ -12,6 +12,7 @@
 - focal loss
 - tversky loss
 - lovasz-softmax loss
+- compound loss of WCE and Dice loss
 
 ## requirments
 
@@ -61,6 +62,7 @@ dice losses are 0.119,0.955,0.265
 focal losses are 0.003,1.793,0.749
 tversky losses are 0.119,0.955,0.265
 lovasz losses are 0.183,0.975,0.452
+compound of WCE and Dice losses are 0.065,1.336,0.659
 ```
 
 
