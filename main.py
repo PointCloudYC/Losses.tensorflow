@@ -32,3 +32,13 @@ if __name__ == "__main__":
             loss_fn(labels,logits_all_wrong),
             loss_fn(labels,logits_common)
         ))
+    
+    wce_fn = CrossEntropyWeightedLoss(weights=[1,2,3])
+    dice_fn = DiceLoss()
+    loss_fn=ComboundLoss((wce_fn,dice_fn),factor=0.8)
+    print("{} losses are {:.3f},{:.3f},{:.3f}".format(
+        'compound of WCE and Dice',
+        loss_fn(y_true=labels,y_pred=logits_all_correct),
+        loss_fn(labels,logits_all_wrong),
+        loss_fn(labels,logits_common)
+    ))

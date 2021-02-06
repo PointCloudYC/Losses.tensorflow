@@ -52,8 +52,8 @@ class CrossEntropyWeightedLoss(keras.losses.Loss):
             num_classes (int): the number of classes
         """
         
-        self.weights = np.array(weights)/sum(weights)
-        self.num_classes = len(weights)
+        self.weights = weights/tf.reduce_sum(weights)
+        self.num_classes = tf.shape(weights)[-1]
         super().__init__(**kwargs)
 
     def call(self, y_true, y_pred):
@@ -68,8 +68,7 @@ class CrossEntropyWeightedLoss(keras.losses.Loss):
         """
 
         y_true = tf.one_hot(y_true, depth=self.num_classes)  # [B,N,K].
-        weights_of_sample = tf.reduce_sum(
-            self.weights * y_true, axis=-1)  # [B,N]
+        weights_of_sample = tf.reduce_sum(tf.cast(self.weights,tf.float32) * y_true, axis=-1)  # [B,N]
         loss_original = tf.nn.softmax_cross_entropy_with_logits(
             labels=y_true, logits=y_pred)  # [B,N]
         output_loss = tf.reduce_mean(
@@ -363,3 +362,39 @@ def lovasz_grad(gt_sorted):
 
 
 # combound loss (e.g. CE+ dice loss)
+class ComboundLoss(keras.losses.Loss):
+    """Dice loss for segmentation task
+    """
+ 
+    def __init__(self, losses, factor,**kwargs):
+        """
+        Args:
+            losses (tuple): two losses objects for computing, e.g. (dice_fn, wce_fn)
+            factor (float): scalar for weighting first loss, the 2nd loss's weight is 1-weight
+        """
+        self.losses = losses
+        self.factor = factor
+        super().__init__(**kwargs)
+
+    def call(self, y_true, y_pred):
+        """
+
+        Args:
+            y_true (tensor): Ground truth values. shape = [batch_size, d0, .. dN], e.g. [B,N,].
+            y_pred (tensor): The predicted values(not probability form). shape = [batch_size, d0, .. dN,K], e.g. [B,N,K]
+
+        Returns:
+            (scalar): Mean weighted cross entropy values of each feature.
+        """
+
+        loss1, loss2 = self.losses
+        loss = self.factor*loss1(y_true,y_pred) +(1-self.factor)*loss2(y_true,y_pred)
+        return loss
+
+    def get_config(self):
+        base_config = super().get_config()
+        return {
+            **base_config,
+            'losses':self.losses,
+            'factor': self.factor
+        }
