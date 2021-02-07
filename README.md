@@ -70,3 +70,4 @@ compound of WCE and Dice losses are 0.065,1.336,0.659
 ## refs
 * [Keras Losses](https://keras.io/api/losses/)
 * [kornia.losses — Kornia documentation](https://kornia.readthedocs.io/en/latest/losses.html)
+* [CoinCheung/pytorch-loss: label-smooth, amsoftmax, focal-loss, triplet-loss, lovasz-softmax. Maybe useful](https://github.com/CoinCheung/pytorch-loss)
